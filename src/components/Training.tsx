@@ -14,8 +14,9 @@ import exercisesJSON from "../static/exercises.json";
 import trainings from "../static/trainings.json";
 import Body from "./Body";
 import { getWorkout, getWorkoutsIds } from "bitnbuild-back";
+import CurrentExcercise from "./CurrentExcercise";
 
-enum ExerciseState {
+export enum ExerciseState {
   INPROGRESS,
   READY,
   BREAK,
@@ -27,7 +28,7 @@ interface Set {
   completed: boolean;
 }
 
-interface Exercise {
+export interface Exercise {
   name: string;
   description: string;
   setsCompleted: number;
@@ -108,90 +109,17 @@ export default function Training() {
       </View>
       <>
         {currentExercise ? (
-          <View style={styles.currentExcerciseContainer}>
-            <TouchableWithoutFeedback onPress={() => setCurrentExercise(null)}>
-              <View style={styles.currentExcerciseBackground} />
-            </TouchableWithoutFeedback>
-            <View style={styles.currentExcerciseContent}>
-              <View style={styles.currentExcerciseBodyContainer}>
-                <Body muscles={currentExercise.muscles} />
-              </View>
-              <View
-                style={{ flex: 1, paddingVertical: 4, position: "relative" }}
-              >
-                {currentExercise.sets.map((set, i) => {
-                  return (
-                    <View key={i} style={styles.currentExcerciseTextContainer}>
-                      <Text style={styles.currentExcerciseIndex}>{i + 1}.</Text>
-                      <Text style={styles.currentExcercisePreviousText}>
-                        8 x 47.5 kg
-                      </Text>
-                      <Text style={styles.currentExcerciseText}>
-                        {set.mass} kg
-                      </Text>
-                      <Text style={styles.currentExcerciseText}>
-                        {set.reps} reps
-                      </Text>
-                      <View
-                        style={[
-                          styles.currentExcerciseCompleted,
-                          {
-                            backgroundColor:
-                              currentExercise.setsCompleted > i
-                                ? "green"
-                                : colors.darkGray,
-                          },
-                        ]}
-                      />
-                      {currentExercise.setsCompleted > i ? (
-                        <View style={styles.currentExcerciseCompletedLine} />
-                      ) : (
-                        <></>
-                      )}
-                    </View>
-                  );
-                })}
-              </View>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  if (exerciseState == ExerciseState.BREAK) return;
-                  else if (exerciseState == ExerciseState.READY)
-                    setExerciseState(ExerciseState.INPROGRESS);
-                  else if (exerciseState == ExerciseState.INPROGRESS) {
-                    setExerciseState(ExerciseState.BREAK);
-                    currentExercise.setsCompleted += 1;
-                    setTimeout(() => {
-                      setExerciseState(ExerciseState.READY);
-                    }, currentExercise.breakTime * 1000);
-                  }
-                }}
-              >
-                <View
-                  style={[
-                    styles.currentExcerciseButton,
-                    {
-                      backgroundColor:
-                        currentExercise.setsCompleted ==
-                        currentExercise.sets.length
-                          ? "green"
-                          : colors.blue,
-                    },
-                  ]}
-                >
-                  <Text style={styles.currentExcerciseButtonText}>
-                    {currentExercise.setsCompleted ==
-                    currentExercise.sets.length
-                      ? "completed"
-                      : exerciseState != ExerciseState.INPROGRESS
-                      ? exerciseState == ExerciseState.BREAK
-                        ? "take a break"
-                        : "start"
-                      : "stop"}
-                  </Text>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
+          <>
+            <View
+              style={{ backgroundColor: "green", width: "100%", height: 20 }}
+            />
+            <CurrentExcercise
+              currentExercise={currentExercise}
+              clearCurrentExcercise={() => setCurrentExercise(null)}
+              exerciseState={exerciseState}
+              setExerciseState={setExerciseState}
+            />
+          </>
         ) : (
           <></>
         )}
@@ -216,7 +144,6 @@ const styles = StyleSheet.create({
     fontFamily: "Lato-Bold",
     fontSize: 32,
     textTransform: "uppercase",
-    // paddingTop: 4,
   },
   contentContainer: {
     flex: 10,
@@ -268,94 +195,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     elevation: 10,
     borderRadius: 6,
-  },
-  //#endregion
-
-  //#region current exercise
-  currentExcerciseContainer: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  currentExcerciseBackground: {
-    backgroundColor: colors.darkBlack,
-    opacity: 0.85,
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  currentExcerciseContent: {
-    width: screenWidth - 24,
-    backgroundColor: colors.white,
-    borderRadius: 24,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    gap: 12,
-    flex: 0.825,
-  },
-  currentExcerciseBodyContainer: {
-    aspectRatio: 1,
-    borderRadius: 16,
-    backgroundColor: colors.darkGray,
-    elevation: 10,
-  },
-  currentExcerciseTextContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  currentExcerciseIndex: {
-    width: 24,
-    fontFamily: "Lato-Bold",
-    fontSize: 14,
-  },
-  currentExcerciseText: {
-    flex: 1,
-    fontFamily: "Lato-Bold",
-    textAlign: "center",
-    fontSize: 14,
-    color: colors.darkBlack,
-  },
-  currentExcercisePreviousText: {
-    flex: 2,
-    fontFamily: "Lato-Bold",
-    textAlign: "center",
-    fontSize: 14,
-    color: colors.darkGray,
-  },
-  currentExcerciseCompleted: {
-    marginLeft: 16,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-  },
-  currentExcerciseCompletedLine: {
-    position: "absolute",
-    backgroundColor: colors.darkGray,
-    top: "50%",
-    height: 1,
-    width: screenWidth - 72,
-  },
-  currentExcerciseButton: {
-    width: "100%",
-    height: 64,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  currentExcerciseButtonText: {
-    color: colors.white,
-    textTransform: "uppercase",
-    fontFamily: "Lato-Bold",
-    fontSize: 20,
   },
   //#endregion
 });

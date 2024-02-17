@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import { View } from "react-native";
 import { Path, Svg } from "react-native-svg";
 import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./src/components/Home";
 import Training from "./src/components/Training";
+import Login from "./src/components/Login";
+import Register from "./src/components/Register";
 import colors from "./colors";
 
 import { init } from "bitnbuild-back";
@@ -18,6 +21,10 @@ export default function App() {
   useEffect(() => {
     init();
   }, []);
+
+  const [isLogin, setIsLogin] = useState(true);
+  const [user, setUser] = useState(null);
+
   const Tab = createBottomTabNavigator();
 
   const [fontsLoaded, fontError] = useFonts({
@@ -30,6 +37,23 @@ export default function App() {
     if (fontsLoaded || fontError) await SplashScreen.hideAsync();
   }, [fontsLoaded, fontError]);
   if (!fontsLoaded && !fontError) return null;
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        {isLogin ? <Login setUser={setUser} /> : <Register setUser={setUser} />}
+
+        <TouchableOpacity
+          onPress={() => setIsLogin(!isLogin)}
+          style={styles.switchAuthButton}
+        >
+          <Text style={styles.switchAuthButtonText}>
+            {isLogin ? "Register" : "Login"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -95,3 +119,19 @@ export default function App() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  switchAuthButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  switchAuthButtonText: {
+    color: colors.blue,
+    fontSize: 20,
+    fontFamily: "Lato-Bold",
+  },
+});

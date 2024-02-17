@@ -14,9 +14,16 @@ import exercisesJSON from "../static/exercises.json";
 import trainings from "../static/trainings.json";
 import Body from "./Body";
 
+enum ExerciseState {
+  INPROGRESS,
+  READY,
+  BREAK,
+}
+
 interface ExerciseProps {
   name: string;
   description: string;
+  setsCompleted: number;
   muscles: { name: string; value: number }[];
 }
 
@@ -28,6 +35,7 @@ interface Set {
 
 interface Exercise {
   props: ExerciseProps;
+  breakTime: number;
   sets: Set[];
 }
 
@@ -35,13 +43,20 @@ export default function Training() {
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
   const [exercises, setExercises] = useState<Exercise[]>();
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>();
+  const [exerciseState, setExerciseState] = useState<ExerciseState>(
+    ExerciseState.READY
+  );
 
   useEffect(() => {
     const training = trainings["chest workout"];
     setExercises(
       training.exercises.map((el) => {
         return {
-          props: exercisesJSON[el.id as keyof object],
+          breakTime: el.breakTime,
+          props: {
+            ...(exercisesJSON[el.id as keyof object] as object),
+            setsCompleted: 0,
+          } as ExerciseProps,
           sets: el.sets as Set[],
         };
       })
@@ -111,7 +126,9 @@ export default function Training() {
               <View style={styles.currentExcerciseBodyContainer}>
                 <Body muscles={currentExercise.props.muscles} />
               </View>
-              <View style={{ flex: 1, paddingVertical: 4 }}>
+              <View
+                style={{ flex: 1, paddingVertical: 4, position: "relative" }}
+              >
                 {currentExercise.sets.map((set, i) => {
                   return (
                     <View key={i} style={styles.currentExcerciseTextContainer}>
@@ -125,14 +142,62 @@ export default function Training() {
                       <Text style={styles.currentExcerciseText}>
                         {set.reps} reps
                       </Text>
-                      <View style={styles.currentExcerciseCompleted} />
+                      <View
+                        style={[
+                          styles.currentExcerciseCompleted,
+                          {
+                            backgroundColor:
+                              currentExercise.props.setsCompleted > i
+                                ? "green"
+                                : colors.darkGray,
+                          },
+                        ]}
+                      />
+                      {currentExercise.props.setsCompleted > i ? (
+                        <View style={styles.currentExcerciseCompletedLine} />
+                      ) : (
+                        <></>
+                      )}
                     </View>
                   );
                 })}
               </View>
-              <TouchableWithoutFeedback>
-                <View style={styles.currentExcerciseButton}>
-                  <Text style={styles.currentExcerciseButtonText}>start</Text>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (exerciseState == ExerciseState.BREAK) return;
+                  else if (exerciseState == ExerciseState.READY)
+                    setExerciseState(ExerciseState.INPROGRESS);
+                  else if (exerciseState == ExerciseState.INPROGRESS) {
+                    setExerciseState(ExerciseState.BREAK);
+                    currentExercise.props.setsCompleted += 1;
+                    setTimeout(() => {
+                      setExerciseState(ExerciseState.READY);
+                    }, currentExercise.breakTime * 1000);
+                  }
+                }}
+              >
+                <View
+                  style={[
+                    styles.currentExcerciseButton,
+                    {
+                      backgroundColor:
+                        currentExercise.props.setsCompleted ==
+                        currentExercise.sets.length
+                          ? "green"
+                          : colors.blue,
+                    },
+                  ]}
+                >
+                  <Text style={styles.currentExcerciseButtonText}>
+                    {currentExercise.props.setsCompleted ==
+                    currentExercise.sets.length
+                      ? "completed"
+                      : exerciseState != ExerciseState.INPROGRESS
+                      ? exerciseState == ExerciseState.BREAK
+                        ? "take a break"
+                        : "start"
+                      : "stop"}
+                  </Text>
                 </View>
               </TouchableWithoutFeedback>
             </View>
@@ -281,12 +346,17 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "green",
+  },
+  currentExcerciseCompletedLine: {
+    position: "absolute",
+    backgroundColor: colors.darkGray,
+    top: "50%",
+    height: 1,
+    width: screenWidth - 72,
   },
   currentExcerciseButton: {
     width: "100%",
     height: 64,
-    backgroundColor: colors.blue,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",

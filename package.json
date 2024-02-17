@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
+    "bitnbuild-back": "git+https://github.com/bitnbuild-szymon/back.git",
     "expo": "~50.0.7",
     "expo-font": "^11.10.3",
     "expo-splash-screen": "^0.26.4",

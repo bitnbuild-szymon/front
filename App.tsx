@@ -1,16 +1,22 @@
+import React, { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import { View } from "react-native";
-import { Svg, Path } from "react-native-svg";
+import { Path, Svg } from "react-native-svg";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./src/components/Home";
 import colors from "./colors";
 
+import { init } from "bitnbuild-back";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  useEffect(() => {
+    init();
+  }, []);
   const Tab = createBottomTabNavigator();
 
   const [fontsLoaded, fontError] = useFonts({

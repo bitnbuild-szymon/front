@@ -109,9 +109,6 @@ export default function Body({ muscles }: { muscles: Muscles[] }) {
       colors.left[musclesKeys.key[i] as keyof typeof colors.left] = "#E25B69FF";
       colors.right[musclesKeys.key[i] as keyof typeof colors.right] =
         "#E25B69FF";
-    } else {
-      colors.left[musclesKeys.key[i] as keyof typeof colors.left] = "";
-      colors.right[musclesKeys.key[i] as keyof typeof colors.right] = "";
     }
   }
 

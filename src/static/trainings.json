@@ -2,7 +2,7 @@
   "chest workout": {
     "exercises": [
       {
-        "id": 2,
+        "id": 0,
         "sets": [
           { "reps": 8, "mass": 50 },
           { "reps": 8, "mass": 50 },
@@ -11,7 +11,15 @@
         ]
       },
       {
-        "id": 0,
+        "id": 1,
+        "sets": [
+          { "reps": 8, "mass": 32.5 },
+          { "reps": 8, "mass": 32.5 },
+          { "reps": 6, "mass": 32.5 }
+        ]
+      },
+      {
+        "id": 2,
         "sets": [
           { "reps": 8, "mass": 32.5 },
           { "reps": 8, "mass": 32.5 },

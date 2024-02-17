@@ -1,0 +1,23 @@
+{
+  "chest workout": {
+    "tasks": [
+      {
+        "id": 2,
+        "sets": [
+          { "reps": 8, "mass": 50 },
+          { "reps": 8, "mass": 50 },
+          { "reps": 10, "mass": 50 },
+          { "reps": 12, "mass": 50 }
+        ]
+      },
+      {
+        "id": 0,
+        "sets": [
+          { "reps": 8, "mass": 32.5 },
+          { "reps": 8, "mass": 32.5 },
+          { "reps": 6, "mass": 32.5 }
+        ]
+      }
+    ]
+  }
+}

@@ -13,6 +13,7 @@ import Training from "./src/components/Training";
 import Login from "./src/components/Login";
 import Register from "./src/components/Register";
 import colors from "./colors";
+import NewWorkout from "./src/components/NewWorkout";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -103,6 +104,16 @@ export default function App() {
                       </Svg>
                     );
                   },
+                }}
+              />
+              <Tab.Screen
+                name="NewWorkout"
+                component={NewWorkout}
+                options={{
+                  // tabBarStyle: { display: "none" },
+                  tabBarItemStyle: { display: "none" },
+                  // tabBarShowLabel: false,
+                  headerShown: false,
                 }}
               />
             </>

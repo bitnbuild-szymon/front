@@ -47,15 +47,18 @@ export default function CurrentExcercise({
                   style={[
                     styles.currentExcerciseCompleted,
                     {
-                      backgroundColor: currentExercise.setsCompleted > i
-                        ? "green"
-                        : colors.darkGray,
+                      backgroundColor:
+                        currentExercise.setsCompleted > i
+                          ? colors.darkGreen
+                          : colors.darkGray,
                     },
                   ]}
                 />
-                {currentExercise.setsCompleted > i
-                  ? <View style={styles.currentExcerciseCompletedLine} />
-                  : <></>}
+                {currentExercise.setsCompleted > i ? (
+                  <View style={styles.currentExcerciseCompletedLine} />
+                ) : (
+                  <></>
+                )}
               </View>
             );
           })}
@@ -80,7 +83,7 @@ export default function CurrentExcercise({
               {
                 backgroundColor:
                   currentExercise.setsCompleted == currentExercise.sets.length
-                    ? "green"
+                    ? colors.darkGreen
                     : colors.blue,
               },
             ]}

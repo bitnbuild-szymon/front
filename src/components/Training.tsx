@@ -6,15 +6,15 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-import { useState, useEffect } from "react";
-import React from "react";
-import colors from "../../colors";
-import exercisesJSON from "../static/exercises.json";
-import trainings from "../static/trainings.json";
-import Body from "./Body";
+import React, { useState, useEffect } from "react";
 import { getWorkout, getWorkoutsIds } from "bitnbuild-back";
+import { AntDesign } from "@expo/vector-icons";
+import colors from "../../colors";
+import Body from "./Body";
 import CurrentExcercise from "./CurrentExcercise";
+import { useNavigation } from "@react-navigation/native";
 
 export enum ExerciseState {
   INPROGRESS,
@@ -44,6 +44,7 @@ export default function Training() {
   const [exerciseState, setExerciseState] = useState<ExerciseState>(
     ExerciseState.READY
   );
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -106,12 +107,26 @@ export default function Training() {
             )}
           </ScrollView>
         </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("NewWorkout" as never)}
+        >
+          <AntDesign
+            name="pluscircle"
+            size={48}
+            color={colors.blue}
+            style={{ position: "absolute", right: 12, bottom: 16 }}
+          />
+        </TouchableOpacity>
       </View>
       <>
         {currentExercise ? (
           <>
             <View
-              style={{ backgroundColor: "green", width: "100%", height: 20 }}
+              style={{
+                backgroundColor: colors.darkGreen,
+                width: "100%",
+                height: 20,
+              }}
             />
             <CurrentExcercise
               currentExercise={currentExercise}

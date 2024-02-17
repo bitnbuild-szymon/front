@@ -1,0 +1,15 @@
+export default {
+  whitesmoke: "#FFFFFF",
+  white: "#E5E5E5",
+  lightGray: "#D9D9D9",
+  mediumGray: "#C7C7C7",
+  darkGray: "#8E8E8E",
+  lightBlack: "#5E5E5E",
+  darkBlack: "#1C1C1C",
+  red: "#D70015",
+  orange: "#FF9F0A",
+  yellow: "#F6CB00",
+  lightGreen: "#34C759",
+  darkGreen: "#248A3D",
+  blue: "#0A84FF",
+};

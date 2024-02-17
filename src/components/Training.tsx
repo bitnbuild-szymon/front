@@ -10,36 +10,38 @@ import {
 import { useState, useEffect } from "react";
 import React from "react";
 import colors from "../../colors";
-import tasksJSON from "../static/tasks.json";
+import exercisesJSON from "../static/exercises.json";
 import trainings from "../static/trainings.json";
+import Body from "./Body";
 
-type TaskProps = {
+interface ExerciseProps {
   name: string;
+  description: string;
   muscles: { name: string; value: number }[];
-};
+}
 
-type Set = {
+interface Set {
   reps: number;
   mass: number;
   completed: boolean;
-};
+}
 
-type Task = {
-  props: TaskProps;
+interface Exercise {
+  props: ExerciseProps;
   sets: Set[];
-};
+}
 
 export default function Training() {
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
-  const [tasks, setTasks] = useState<Task[]>([tasksJSON] as unknown as Task[]);
-  const [currentTask, setCurrentTask] = useState<Task | null>();
+  const [exercises, setExercises] = useState<Exercise[]>();
+  const [currentExercise, setCurrentExercise] = useState<Exercise | null>();
 
   useEffect(() => {
     const training = trainings["chest workout"];
-    setTasks(
-      training.tasks.map((el) => {
+    setExercises(
+      training.exercises.map((el) => {
         return {
-          props: tasksJSON[el.id as keyof object],
+          props: exercisesJSON[el.id as keyof object],
           sets: el.sets as Set[],
         };
       })
@@ -64,32 +66,32 @@ export default function Training() {
             {scrollViewHeight == 0 ? (
               <></>
             ) : (
-              tasks?.map((task, i) => {
+              exercises?.map((exercise, i) => {
                 return (
                   <TouchableWithoutFeedback
                     key={i}
-                    onPress={() => setCurrentTask(task)}
+                    onPress={() => setCurrentExercise(exercise)}
                   >
                     <View
                       style={[
-                        styles.taskContainer,
+                        styles.exerciseContainer,
                         {
                           width: screenWidth - 20,
                           height: scrollViewHeight / 6 - 10 - 10 / 6,
                         },
                       ]}
                     >
-                      <View style={styles.taskTextContainer}>
-                        <Text style={styles.taskNameText}>
-                          {task.props.name[0].toUpperCase() +
-                            task.props.name.slice(1)}
+                      <View style={styles.exerciseTextContainer}>
+                        <Text style={styles.exerciseNameText}>
+                          {exercise.props.name[0].toUpperCase() +
+                            exercise.props.name.slice(1)}
                         </Text>
-                        <Text style={styles.taskAmountText}>
-                          {`${0} of ${task.sets.length}`}
+                        <Text style={styles.exerciseAmountText}>
+                          {`${0} of ${exercise.sets.length}`}
                         </Text>
                       </View>
-                      <View style={styles.taskBodyContainer}>
-                        <Text>muscles image</Text>
+                      <View style={styles.exerciseBodyContainer}>
+                        <Body muscles={exercise.props.muscles} />
                       </View>
                     </View>
                   </TouchableWithoutFeedback>
@@ -100,36 +102,37 @@ export default function Training() {
         </View>
       </View>
       <>
-        {currentTask ? (
-          <View style={styles.currentTaskContainer}>
-            <TouchableWithoutFeedback onPress={() => setCurrentTask(null)}>
-              <View style={styles.currentTaskBackground} />
+        {currentExercise ? (
+          <View style={styles.currentExcerciseContainer}>
+            <TouchableWithoutFeedback onPress={() => setCurrentExercise(null)}>
+              <View style={styles.currentExcerciseBackground} />
             </TouchableWithoutFeedback>
-
-            <View style={styles.currentTaskContent}>
-              <View style={styles.currentTaskBodyContainer}>
-                <Text>muscles image</Text>
+            <View style={styles.currentExcerciseContent}>
+              <View style={styles.currentExcerciseBodyContainer}>
+                <Body muscles={currentExercise.props.muscles} />
               </View>
               <View style={{ flex: 1, paddingVertical: 4 }}>
-                {currentTask.sets.map((set, i) => {
+                {currentExercise.sets.map((set, i) => {
                   return (
-                    <View key={i} style={styles.currentTaskTextContainer}>
-                      <Text style={styles.currentTaskIndex}>{i + 1}.</Text>
-                      <Text style={styles.currentTaskPreviousText}>
+                    <View key={i} style={styles.currentExcerciseTextContainer}>
+                      <Text style={styles.currentExcerciseIndex}>{i + 1}.</Text>
+                      <Text style={styles.currentExcercisePreviousText}>
                         8 x 47.5 kg
                       </Text>
-                      <Text style={styles.currentTaskText}>{set.mass} kg</Text>
-                      <Text style={styles.currentTaskText}>
+                      <Text style={styles.currentExcerciseText}>
+                        {set.mass} kg
+                      </Text>
+                      <Text style={styles.currentExcerciseText}>
                         {set.reps} reps
                       </Text>
-                      <View style={styles.currentTaskCompleted} />
+                      <View style={styles.currentExcerciseCompleted} />
                     </View>
                   );
                 })}
               </View>
               <TouchableWithoutFeedback>
-                <View style={styles.currentTaskButton}>
-                  <Text style={styles.currentTaskButtonText}>start</Text>
+                <View style={styles.currentExcerciseButton}>
+                  <Text style={styles.currentExcerciseButtonText}>start</Text>
                 </View>
               </TouchableWithoutFeedback>
             </View>
@@ -175,32 +178,32 @@ const styles = StyleSheet.create({
   },
   //#endregion
 
-  //#region tasks
-  taskContainer: {
+  //#region exercises
+  exerciseContainer: {
     backgroundColor: colors.lightGray,
     borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     padding: 6,
   },
-  taskTextContainer: {
+  exerciseTextContainer: {
     flex: 4,
     height: "100%",
     marginRight: 8,
     marginLeft: 2,
   },
-  taskNameText: {
+  exerciseNameText: {
     color: colors.darkBlack,
     fontFamily: "Lato-Bold",
     fontSize: 14,
   },
-  taskAmountText: {
+  exerciseAmountText: {
     color: colors.darkGray,
     fontFamily: "Lato-Bold",
     fontSize: 12,
     marginTop: 4,
   },
-  taskBodyContainer: {
+  exerciseBodyContainer: {
     height: "100%",
     aspectRatio: 1,
     backgroundColor: colors.blue,
@@ -213,8 +216,8 @@ const styles = StyleSheet.create({
   },
   //#endregion
 
-  //#region current task
-  currentTaskContainer: {
+  //#region current exercise
+  currentExcerciseContainer: {
     position: "absolute",
     top: 0,
     bottom: 0,
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  currentTaskBackground: {
+  currentExcerciseBackground: {
     backgroundColor: colors.darkBlack,
     opacity: 0.85,
     position: "absolute",
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-  currentTaskContent: {
+  currentExcerciseContent: {
     width: screenWidth - 24,
     backgroundColor: colors.white,
     borderRadius: 24,
@@ -242,45 +245,45 @@ const styles = StyleSheet.create({
     gap: 12,
     flex: 0.825,
   },
-  currentTaskBodyContainer: {
+  currentExcerciseBodyContainer: {
     aspectRatio: 1,
     borderRadius: 16,
     backgroundColor: colors.darkGray,
     elevation: 10,
   },
-  currentTaskTextContainer: {
+  currentExcerciseTextContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  currentTaskIndex: {
+  currentExcerciseIndex: {
     width: 24,
     fontFamily: "Lato-Bold",
     fontSize: 14,
   },
-  currentTaskText: {
+  currentExcerciseText: {
     flex: 1,
     fontFamily: "Lato-Bold",
     textAlign: "center",
     fontSize: 14,
     color: colors.darkBlack,
   },
-  currentTaskPreviousText: {
+  currentExcercisePreviousText: {
     flex: 2,
     fontFamily: "Lato-Bold",
     textAlign: "center",
     fontSize: 14,
     color: colors.darkGray,
   },
-  currentTaskCompleted: {
+  currentExcerciseCompleted: {
     marginLeft: 16,
     width: 24,
     height: 24,
     borderRadius: 12,
     backgroundColor: "green",
   },
-  currentTaskButton: {
+  currentExcerciseButton: {
     width: "100%",
     height: 64,
     backgroundColor: colors.blue,
@@ -288,7 +291,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  currentTaskButtonText: {
+  currentExcerciseButtonText: {
     color: colors.white,
     textTransform: "uppercase",
     fontFamily: "Lato-Bold",

@@ -1,9 +1,10 @@
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
   Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import React from "react";
 import Body from "./Body";
@@ -46,28 +47,25 @@ export default function CurrentExcercise({
                   style={[
                     styles.currentExcerciseCompleted,
                     {
-                      backgroundColor:
-                        currentExercise.setsCompleted > i
-                          ? "green"
-                          : colors.darkGray,
+                      backgroundColor: currentExercise.setsCompleted > i
+                        ? "green"
+                        : colors.darkGray,
                     },
                   ]}
                 />
-                {currentExercise.setsCompleted > i ? (
-                  <View style={styles.currentExcerciseCompletedLine} />
-                ) : (
-                  <></>
-                )}
+                {currentExercise.setsCompleted > i
+                  ? <View style={styles.currentExcerciseCompletedLine} />
+                  : <></>}
               </View>
             );
           })}
         </View>
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           onPress={() => {
             if (exerciseState == ExerciseState.BREAK) return;
-            else if (exerciseState == ExerciseState.READY)
+            else if (exerciseState == ExerciseState.READY) {
               setExerciseState(ExerciseState.INPROGRESS);
-            else if (exerciseState == ExerciseState.INPROGRESS) {
+            } else if (exerciseState == ExerciseState.INPROGRESS) {
               setExerciseState(ExerciseState.BREAK);
               currentExercise.setsCompleted += 1;
               setTimeout(() => {
@@ -97,7 +95,7 @@ export default function CurrentExcercise({
                 : "stop"}
             </Text>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     </View>
   );

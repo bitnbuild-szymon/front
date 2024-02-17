@@ -1,21 +1,20 @@
 import React, { useRef, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   Dimensions,
   StatusBar,
+  StyleSheet,
+  Text,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../colors";
 import Time from "../static/time";
 import quotes from "../static/quotes.json";
 
-export default function Home() {
+export default function Home({ route }) {
   const containerHeight = useRef<number>();
   const navigation = useNavigation();
-  const user = { name: "user" };
   const date = new Time(new Date());
 
   const getRandomQuote = () => {
@@ -40,7 +39,9 @@ export default function Home() {
           >
             <View style={styles.userProfilePicture} />
           </TouchableWithoutFeedback>
-          <Text style={styles.userText}>Hello, {user.name}</Text>
+          <Text style={styles.userText}>
+            Hello, {route.params?.profile?.username || "User"}
+          </Text>
         </View>
         <View style={styles.quoteView}>
           <Text style={styles.quoteText}>{quote.text}</Text>

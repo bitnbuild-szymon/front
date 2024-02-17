@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Dimensions,
   StatusBar,
@@ -34,14 +34,15 @@ export default function Home({ route }) {
         }}
       >
         <View style={styles.userView}>
-          <TouchableWithoutFeedback
-            onPress={() => console.log("open settings")}
-          >
-            <View style={styles.userProfilePicture} />
-          </TouchableWithoutFeedback>
           <Text style={styles.userText}>
             Hello, {route.params?.profile?.username || "User"}
           </Text>
+
+          <TouchableWithoutFeedback
+            onPress={route.params?.logout}
+          >
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableWithoutFeedback>
         </View>
         <View style={styles.quoteView}>
           <Text style={styles.quoteText}>{quote.text}</Text>
@@ -205,4 +206,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 6,
   },
   //#endregion
+  logoutText: {
+    color: colors.white,
+    backgroundColor: colors.red,
+    padding: 8,
+    borderRadius: 8,
+  },
 });

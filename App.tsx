@@ -63,7 +63,10 @@ export default function App() {
           <Tab.Screen
             name="Home"
             component={Home}
-            initialParams={{ profile: user.userProfile }}
+            initialParams={{
+              profile: user.userProfile,
+              logout: () => setUser(null),
+            }}
             options={{
               headerShown: false,
               tabBarActiveTintColor: colors.blue,
@@ -82,7 +85,10 @@ export default function App() {
           <Tab.Screen
             name="Training"
             component={Training}
-            initialParams={{ profile: user.userProfile }}
+            initialParams={{
+              profile: user.userProfile,
+              logout: () => setUser(null),
+            }}
             options={{
               headerShown: false,
               tabBarActiveTintColor: colors.blue,
@@ -101,7 +107,10 @@ export default function App() {
           <Tab.Screen
             name="Diet"
             component={Home}
-            initialParams={{ profile: user.userProfile }}
+            initialParams={{
+              profile: user.userProfile,
+              logout: () => setUser(null),
+            }}
             options={{
               headerShown: false,
               tabBarActiveTintColor: colors.blue,

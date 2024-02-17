@@ -102,7 +102,7 @@ export default function Training() {
                             exercise.props.name.slice(1)}
                         </Text>
                         <Text style={styles.exerciseAmountText}>
-                          {`${0} of ${exercise.sets.length}`}
+                          {`${exercise.props.setsCompleted} of ${exercise.sets.length}`}
                         </Text>
                       </View>
                       <View style={styles.exerciseBodyContainer}>

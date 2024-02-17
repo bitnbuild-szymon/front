@@ -13,18 +13,12 @@ import colors from "../../colors";
 import exercisesJSON from "../static/exercises.json";
 import trainings from "../static/trainings.json";
 import Body from "./Body";
+import { getWorkout, getWorkoutsIds } from "bitnbuild-back";
 
 enum ExerciseState {
   INPROGRESS,
   READY,
   BREAK,
-}
-
-interface ExerciseProps {
-  name: string;
-  description: string;
-  setsCompleted: number;
-  muscles: { name: string; value: number }[];
 }
 
 interface Set {
@@ -34,7 +28,10 @@ interface Set {
 }
 
 interface Exercise {
-  props: ExerciseProps;
+  name: string;
+  description: string;
+  setsCompleted: number;
+  muscles: { [key: string]: number };
   breakTime: number;
   sets: Set[];
 }
@@ -48,19 +45,12 @@ export default function Training() {
   );
 
   useEffect(() => {
-    const training = trainings["chest workout"];
-    setExercises(
-      training.exercises.map((el) => {
-        return {
-          breakTime: el.breakTime,
-          props: {
-            ...(exercisesJSON[el.id as keyof object] as object),
-            setsCompleted: 0,
-          } as ExerciseProps,
-          sets: el.sets as Set[],
-        };
-      })
-    );
+    (async () => {
+      const training = await getWorkout("BIkNMkSO2W0ONVXDu17v");
+      setExercises(
+        training.exercises.map((el: Exercise) => ({ ...el, setsCompleted: 0 }))
+      );
+    })();
   }, []);
 
   return (
@@ -98,15 +88,15 @@ export default function Training() {
                     >
                       <View style={styles.exerciseTextContainer}>
                         <Text style={styles.exerciseNameText}>
-                          {exercise.props.name[0].toUpperCase() +
-                            exercise.props.name.slice(1)}
+                          {exercise.name[0].toUpperCase() +
+                            exercise.name.slice(1)}
                         </Text>
                         <Text style={styles.exerciseAmountText}>
-                          {`${exercise.props.setsCompleted} of ${exercise.sets.length}`}
+                          {`${exercise.setsCompleted} of ${exercise.sets.length}`}
                         </Text>
                       </View>
                       <View style={styles.exerciseBodyContainer}>
-                        <Body muscles={exercise.props.muscles} />
+                        <Body muscles={exercise.muscles} />
                       </View>
                     </View>
                   </TouchableWithoutFeedback>
@@ -124,7 +114,7 @@ export default function Training() {
             </TouchableWithoutFeedback>
             <View style={styles.currentExcerciseContent}>
               <View style={styles.currentExcerciseBodyContainer}>
-                <Body muscles={currentExercise.props.muscles} />
+                <Body muscles={currentExercise.muscles} />
               </View>
               <View
                 style={{ flex: 1, paddingVertical: 4, position: "relative" }}
@@ -147,13 +137,13 @@ export default function Training() {
                           styles.currentExcerciseCompleted,
                           {
                             backgroundColor:
-                              currentExercise.props.setsCompleted > i
+                              currentExercise.setsCompleted > i
                                 ? "green"
                                 : colors.darkGray,
                           },
                         ]}
                       />
-                      {currentExercise.props.setsCompleted > i ? (
+                      {currentExercise.setsCompleted > i ? (
                         <View style={styles.currentExcerciseCompletedLine} />
                       ) : (
                         <></>
@@ -169,7 +159,7 @@ export default function Training() {
                     setExerciseState(ExerciseState.INPROGRESS);
                   else if (exerciseState == ExerciseState.INPROGRESS) {
                     setExerciseState(ExerciseState.BREAK);
-                    currentExercise.props.setsCompleted += 1;
+                    currentExercise.setsCompleted += 1;
                     setTimeout(() => {
                       setExerciseState(ExerciseState.READY);
                     }, currentExercise.breakTime * 1000);
@@ -181,7 +171,7 @@ export default function Training() {
                     styles.currentExcerciseButton,
                     {
                       backgroundColor:
-                        currentExercise.props.setsCompleted ==
+                        currentExercise.setsCompleted ==
                         currentExercise.sets.length
                           ? "green"
                           : colors.blue,
@@ -189,7 +179,7 @@ export default function Training() {
                   ]}
                 >
                   <Text style={styles.currentExcerciseButtonText}>
-                    {currentExercise.props.setsCompleted ==
+                    {currentExercise.setsCompleted ==
                     currentExercise.sets.length
                       ? "completed"
                       : exerciseState != ExerciseState.INPROGRESS

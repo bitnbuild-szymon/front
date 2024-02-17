@@ -2,39 +2,10 @@ import { Svg, Path } from "react-native-svg";
 import React from "react";
 
 interface Muscles {
-  name: string;
-  value: number;
+  [key: string]: number;
 }
 
-export default function Body({ muscles }: { muscles: Muscles[] }) {
-  interface MusclesKeys {
-    key: string[];
-  }
-
-  const musclesKeys: MusclesKeys = {
-    key: [
-      "biceps",
-      "triceps",
-      "arm",
-      "forearm",
-      "calves",
-      "thighs",
-      "chestUpper",
-      "chestMedium",
-      "chestLower",
-      "abdominalUpper",
-      "abdominalMedium",
-      "abdominalLower",
-      "abdominalLowest",
-      "abdominalObliqueUpper",
-      "abdominalObliqueMedium",
-      "abdominalObliqueLower",
-      "abdominalObliqueLowest",
-      "upperBack",
-      "back",
-    ],
-  };
-
+export default function Body({ muscles }: { muscles: Muscles }) {
   const colors = {
     left: {
       // hand
@@ -96,21 +67,18 @@ export default function Body({ muscles }: { muscles: Muscles[] }) {
     },
   };
 
-  for (let i = 0; i < muscles.length; i++) {
-    if (muscles[i].value == 3) {
-      colors.left[musclesKeys.key[i] as keyof typeof colors.left] = "#D70015FF";
-      colors.right[musclesKeys.key[i] as keyof typeof colors.right] =
-        "#D70015FF";
-    } else if (muscles[i].value == 2) {
-      colors.left[musclesKeys.key[i] as keyof typeof colors.left] = "#DC3545FF";
-      colors.right[musclesKeys.key[i] as keyof typeof colors.right] =
-        "#DC3545FF";
-    } else if (muscles[i].value == 1) {
-      colors.left[musclesKeys.key[i] as keyof typeof colors.left] = "#E25B69FF";
-      colors.right[musclesKeys.key[i] as keyof typeof colors.right] =
-        "#E25B69FF";
+  Object.keys(muscles).forEach((key) => {
+    if (muscles[key] == 3) {
+      colors.left[key as keyof typeof colors.left] = "#D70015FF";
+      colors.right[key as keyof typeof colors.left] = "#D70015FF";
+    } else if (muscles[key] == 2) {
+      colors.left[key as keyof typeof colors.left] = "#DC3545FF";
+      colors.right[key as keyof typeof colors.left] = "#DC3545FF";
+    } else if (muscles[key] == 1) {
+      colors.left[key as keyof typeof colors.left] = "#E25B69FF";
+      colors.right[key as keyof typeof colors.left] = "#E25B69FF";
     }
-  }
+  });
 
   return (
     <Svg height="100%" width="100%" viewBox="0 0 100 100">

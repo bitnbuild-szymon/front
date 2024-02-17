@@ -7,6 +7,7 @@ import { Path, Svg } from "react-native-svg";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./src/components/Home";
+import Training from "./src/components/Training";
 import colors from "./colors";
 
 import { init } from "bitnbuild-back";
@@ -55,7 +56,7 @@ export default function App() {
           />
           <Tab.Screen
             name="Training"
-            component={Home}
+            component={Training}
             options={{
               headerShown: false,
               tabBarActiveTintColor: colors.blue,

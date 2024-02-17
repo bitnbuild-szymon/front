@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../colors";
 import Time from "../static/time";
+import quotes from "../static/quotes.json";
 
 export default function Home() {
   const containerHeight = useRef<number>();
@@ -17,12 +18,12 @@ export default function Home() {
   const user = { name: "user" };
   const date = new Time(new Date());
 
-  // TODO get random quote from ../static/quotes
-
-  const quote = {
-    text: "Success is not final, failure is not fatal: It is the courage to continue that counts. ",
-    author: "Winston Churchil",
+  const getRandomQuote = () => {
+    const index = Math.floor(Math.random() * quotes.length);
+    return quotes[index];
   };
+
+  const quote = getRandomQuote();
 
   return (
     <>

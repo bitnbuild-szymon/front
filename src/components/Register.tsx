@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { signUpWithEmail } from "bitnbuild-back";
 
-export default function Register({ setUser }) {
+export default function Register({ route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -18,7 +18,7 @@ export default function Register({ setUser }) {
   const handleSubmit = async () => {
     try {
       const user = await signUpWithEmail(email, password, username);
-      setUser(user);
+      route.params.setUser(user);
     } catch (e) {
       setError(e.message);
     }

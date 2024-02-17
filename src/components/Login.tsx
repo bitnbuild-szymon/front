@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { signInWithEmail } from "bitnbuild-back";
 
-export default function Login({ setUser }) {
+export default function Login({ route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,7 +17,7 @@ export default function Login({ setUser }) {
   const handleSubmit = async () => {
     try {
       const user = await signInWithEmail(email, password);
-      setUser(user);
+      route.params.setUser(user);
     } catch (e) {
       setError(e.message);
     }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Dimensions,
   StyleSheet,
   Text,
   TextInput,
@@ -7,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { signInWithEmail } from "bitnbuild-back";
+import colors from "../../colors";
 
 export default function Login({ route }) {
   const [email, setEmail] = useState("");
@@ -60,21 +62,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: "80%",
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: "#f4f4f4",
+    width: "72%",
+    padding: 8,
+    marginBottom: 8,
+    borderRadius: 6,
+    backgroundColor: colors.lightGray,
   },
   error: {
-    color: "red",
+    color: colors.red,
     marginBottom: 10,
   },
   button: {
-    backgroundColor: "blue",
+    backgroundColor: colors.blue,
     padding: 10,
     borderRadius: 5,
+    width: "72%",
   },
   buttonText: {
-    color: "white",
+    color: colors.whitesmoke,
+    textAlign: "center",
   },
 });

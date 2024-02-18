@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -33,6 +34,7 @@ export default function NewWorkout({ route }) {
     null,
   );
   const [selected, setSelected] = useState<number[]>();
+  const [name, setName] = useState<string>("name");
 
   const navigator = useNavigation();
 
@@ -57,6 +59,12 @@ export default function NewWorkout({ route }) {
           </Text>
         </View>
         <View style={styles.contentContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your text here..."
+            onChangeText={setName}
+            value={name}
+          />
           {exercises
             ? (
               <ScrollView
@@ -105,12 +113,12 @@ export default function NewWorkout({ route }) {
                   onPress={async () => {
                     try {
                       const id = await addWorkout({
-                        name: "test",
+                        name,
                         exercises: selected?.map((i) => exercises[i].data),
                       });
                       await addOwnedWorkouts(route.params.profile.id, [id]);
                     } catch (e) {}
-                    navigator.goBack();
+                    navigator.navigate("Training");
                   }}
                 >
                   <View
@@ -307,4 +315,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   //#endregion
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    fontSize: 18,
+    margin: 10,
+  },
 });

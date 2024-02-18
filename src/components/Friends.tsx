@@ -48,7 +48,7 @@ export default function Friends({ route }) {
       <StatusBar backgroundColor={colors.darkBlack} />
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>friends</Text>
+          <Text style={styles.title}>add friends</Text>
         </View>
         <View style={styles.contentContainer}>
           <FriendsScrollList friends={friends} setUser={addF} />

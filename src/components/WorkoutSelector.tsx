@@ -111,10 +111,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   workoutContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
     backgroundColor: colors.darkBlack,
     padding: 10,
+    paddingBottom: 16,
     margin: 5,
     borderRadius: 10,
+    height: 80,
   },
   workoutName: {
     color: colors.white,

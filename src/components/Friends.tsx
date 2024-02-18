@@ -4,10 +4,6 @@ import { addFriend, getUser, getUsersIds } from "bitnbuild-back";
 import colors from "../../colors";
 import FriendsScrollList from "./FriendsScrollList";
 
-// TODO you challange someone
-// TODO someone challenge you (who and which workout)
-// TODO you can add someone to friends
-
 interface SharedWorkout {
   id: string;
   by: string;

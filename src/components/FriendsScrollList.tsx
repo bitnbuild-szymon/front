@@ -32,33 +32,29 @@ export default function FriendsScrollList({ friends, setUser }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}
       >
-        {friends
-          ? (
-            friends.map((user) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    setUser(user);
-                  }}
-                  style={styles.userContainer}
-                >
-                  <FontAwesome6
-                    name="person"
-                    size={24}
-                    color={colors.darkBlack}
-                  />
-                  <Text style={{ color: colors.darkBlack }}>
-                    {user.username}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })
-          )
-          : (
-            <View style={styles.iconContainer}>
-              <ActivityIndicator size={32} color={colors.blue} />
-            </View>
-          )}
+        {friends ? (
+          friends.map((user) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setUser(user);
+                }}
+                style={styles.userContainer}
+              >
+                <FontAwesome6
+                  name="person"
+                  size={24}
+                  color={colors.darkBlack}
+                />
+                <Text style={{ color: colors.darkBlack }}>{user.username}</Text>
+              </TouchableOpacity>
+            );
+          })
+        ) : (
+          <View style={styles.iconContainer}>
+            <ActivityIndicator size={32} color={colors.blue} />
+          </View>
+        )}
       </ScrollView>
     </>
   );
@@ -79,7 +75,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     gap: 12,
     width: "100%",
-    height: 32,
     backgroundColor: colors.lightGray,
   },
 });

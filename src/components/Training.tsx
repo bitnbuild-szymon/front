@@ -1,14 +1,14 @@
 import {
-  View,
-  Text,
-  StatusBar,
-  ScrollView,
-  TouchableWithoutFeedback,
   Dimensions,
+  ScrollView,
+  StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getWorkout, getWorkoutsIds } from "bitnbuild-back";
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../../colors";
@@ -42,7 +42,7 @@ export default function Training() {
   const [exercises, setExercises] = useState<Exercise[]>();
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>();
   const [exerciseState, setExerciseState] = useState<ExerciseState>(
-    ExerciseState.READY
+    ExerciseState.READY,
   );
   const navigation = useNavigation();
 
@@ -50,7 +50,7 @@ export default function Training() {
     (async () => {
       const training = await getWorkout("BIkNMkSO2W0ONVXDu17v");
       setExercises(
-        training.exercises.map((el: Exercise) => ({ ...el, setsCompleted: 0 }))
+        training.exercises.map((el: Exercise) => ({ ...el, setsCompleted: 0 })),
       );
     })();
   }, []);
@@ -66,13 +66,10 @@ export default function Training() {
           <ScrollView
             showsVerticalScrollIndicator={false}
             onLayout={({ nativeEvent }) =>
-              setScrollViewHeight(nativeEvent.layout.height)
-            }
+              setScrollViewHeight(nativeEvent.layout.height)}
             contentContainerStyle={styles.scrollView}
           >
-            {scrollViewHeight == 0 ? (
-              <></>
-            ) : (
+            {scrollViewHeight == 0 ? <></> : (
               exercises?.map((exercise, i) => {
                 return (
                   <TouchableWithoutFeedback
@@ -107,7 +104,7 @@ export default function Training() {
             )}
           </ScrollView>
         </View>
-        <TouchableOpacity
+        <TouchableWithoutFeedback
           onPress={() => navigation.navigate("NewWorkout" as never)}
         >
           <AntDesign
@@ -116,28 +113,28 @@ export default function Training() {
             color={colors.blue}
             style={{ position: "absolute", right: 12, bottom: 16 }}
           />
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </View>
       <>
-        {currentExercise ? (
-          <>
-            <View
-              style={{
-                backgroundColor: colors.darkGreen,
-                width: "100%",
-                height: 20,
-              }}
-            />
-            <CurrentExcercise
-              currentExercise={currentExercise}
-              clearCurrentExcercise={() => setCurrentExercise(null)}
-              exerciseState={exerciseState}
-              setExerciseState={setExerciseState}
-            />
-          </>
-        ) : (
-          <></>
-        )}
+        {currentExercise
+          ? (
+            <>
+              <View
+                style={{
+                  backgroundColor: colors.darkGreen,
+                  width: "100%",
+                  height: 20,
+                }}
+              />
+              <CurrentExcercise
+                currentExercise={currentExercise}
+                clearCurrentExcercise={() => setCurrentExercise(null)}
+                exerciseState={exerciseState}
+                setExerciseState={setExerciseState}
+              />
+            </>
+          )
+          : <></>}
       </>
     </>
   );

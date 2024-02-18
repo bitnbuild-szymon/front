@@ -86,7 +86,7 @@ export default function Home({ route }) {
           <View style={styles.componentContainer}>
             <FriendsScrollList friends={friends} setUser={selUser} />
           </View>
-          <View style={styles.challangeContainer}>
+          <View style={styles.workoutsContainer}>
             <WorkoutSelector
               setWorkout={selWork}
               ownWorkouts={ownWorkouts}
@@ -94,32 +94,22 @@ export default function Home({ route }) {
             />
           </View>
           <View style={styles.challangeContainer}>
-            {seluser
-              ? (
-                <Text style={styles.seluser}>
-                  You are challenging {seluser.username}
-                </Text>
+            {seluser ? (
+              <Text style={styles.seluser}>
+                You are challenging {seluser.username}
+              </Text>
+            ) : (
+              <>
+                <Text style={styles.seluser}>Select a friend to challenge</Text>
+              </>
+            )}
+            {selwork ? (
+              seluser && (
+                <Text style={styles.selwork}>with {selwork.name} workout</Text>
               )
-              : (
-                <>
-                  <Text style={styles.seluser}>
-                    Select a friend to challenge
-                  </Text>
-                </>
-              )}
-            {selwork
-              ? (
-                seluser && (
-                  <Text style={styles.selwork}>
-                    with {selwork.name} workout
-                  </Text>
-                )
-              )
-              : (
-                <Text style={styles.seluser}>
-                  Select a workout to challenge
-                </Text>
-              )}
+            ) : (
+              <Text style={styles.seluser}>Select a workout to challenge</Text>
+            )}
             {seluser && selwork && (
               <TouchableOpacity
                 onPress={async () => {
@@ -127,8 +117,7 @@ export default function Home({ route }) {
                     await shareWorkouts(seluser.id, route.params.profile.id, [
                       selwork.id,
                     ]);
-                  } catch (e) {
-                  }
+                  } catch (e) {}
                   selWork(null);
                   selUser(null);
                 }}
@@ -252,15 +241,20 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  //#region progress
-  challangeContainer: {
+  workoutsContainer: {
     flex: 3,
     paddingHorizontal: 8,
     backgroundColor: colors.lightGray,
     borderRadius: 10,
   },
 
-  //#endregion
+  challangeContainer: {
+    flex: 1,
+    paddingHorizontal: 8,
+    backgroundColor: colors.lightGray,
+    borderRadius: 10,
+  },
+
   logoutText: {
     color: colors.white,
     backgroundColor: colors.red,

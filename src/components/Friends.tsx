@@ -31,14 +31,16 @@ export default function Friends({ route }) {
 
   useEffect(() => {
     (async () => {
-      const ids = await getUsersIds(); // your id
+      const ids = await getUsersIds();
       const friends: User[] = [];
       for (const friendId of ids) {
         if (
           !route.params.profile.friends.includes(friendId) &&
           route.params.profile.id !== friendId
         ) {
-          friends.push(await getUser(friendId));
+          try {
+            friends.push(await getUser(friendId));
+          } catch (error) {}
         }
       }
       setFriends(friends);

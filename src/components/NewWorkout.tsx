@@ -25,7 +25,7 @@ export default function NewWorkout() {
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
   const [exercises, setExercises] = useState<ExerciseItem[]>();
   const [currentExercise, setCurrentExercise] = useState<ExerciseItem | null>(
-    null,
+    null
   );
   const [selected, setSelected] = useState<number[]>();
 
@@ -47,136 +47,136 @@ export default function NewWorkout() {
       <StatusBar backgroundColor={colors.darkBlack} />
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>create &nbsp;workout</Text>
+          <Text style={[styles.title, { fontSize: 24 }]}>
+            create &nbsp;workout
+          </Text>
         </View>
         <View style={styles.contentContainer}>
-          {exercises
-            ? (
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                onLayout={({ nativeEvent }) =>
-                  setScrollViewHeight(nativeEvent.layout.height)}
-                contentContainerStyle={styles.scrollView}
-              >
-                {scrollViewHeight == 0 ? <></> : (
-                  exercises?.map((exercise, i) => {
-                    return (
-                      <TouchableWithoutFeedback
-                        key={i}
-                        onPress={() => setCurrentExercise(exercise)}
+          {exercises ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onLayout={({ nativeEvent }) =>
+                setScrollViewHeight(nativeEvent.layout.height)
+              }
+              contentContainerStyle={styles.scrollView}
+            >
+              {scrollViewHeight == 0 ? (
+                <></>
+              ) : (
+                exercises?.map((exercise, i) => {
+                  return (
+                    <TouchableWithoutFeedback
+                      key={i}
+                      onPress={() => setCurrentExercise(exercise)}
+                    >
+                      <View
+                        style={[
+                          styles.exerciseContainer,
+                          {
+                            width: screenWidth - 20,
+                            height: scrollViewHeight / 6 - 10 - 10 / 6,
+                            backgroundColor: selected?.includes(i)
+                              ? colors.darkGreen
+                              : colors.lightGray,
+                          },
+                        ]}
                       >
-                        <View
-                          style={[
-                            styles.exerciseContainer,
-                            {
-                              width: screenWidth - 20,
-                              height: scrollViewHeight / 6 - 10 - 10 / 6,
-                              backgroundColor: selected?.includes(i)
-                                ? colors.darkGreen
-                                : colors.lightGray,
-                            },
-                          ]}
-                        >
-                          <View style={styles.exerciseTextContainer}>
-                            <Text style={styles.exerciseNameText}>
-                              {exercise.data.name[0].toUpperCase() +
-                                exercise.data.name.slice(1)}
-                            </Text>
-                            <Text style={styles.exerciseAmountText}>
-                              {exercise.data.description}
-                            </Text>
-                          </View>
-                          <View style={styles.exerciseBodyContainer}>
-                            <Body muscles={exercise.data.muscles} />
-                          </View>
+                        <View style={styles.exerciseTextContainer}>
+                          <Text style={styles.exerciseNameText}>
+                            {exercise.data.name[0].toUpperCase() +
+                              exercise.data.name.slice(1)}
+                          </Text>
+                          <Text style={styles.exerciseAmountText}>
+                            {exercise.data.description}
+                          </Text>
                         </View>
-                      </TouchableWithoutFeedback>
-                    );
-                  })
-                )}
-                <TouchableOpacity
-                  onPress={async () => {
-                    try {
-                      await addWorkout({
-                        name: "test",
-                        exercises: selected?.map((i) => exercises[i].data),
-                      });
-                    } catch (e) {
-                    }
-                    navigator.goBack();
-                  }}
+                        <View style={styles.exerciseBodyContainer}>
+                          <Body muscles={exercise.data.muscles} />
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  );
+                })
+              )}
+              <TouchableOpacity
+                onPress={async () => {
+                  try {
+                    await addWorkout({
+                      name: "test",
+                      exercises: selected?.map((i) => exercises[i].data),
+                    });
+                  } catch (e) {}
+                  navigator.goBack();
+                }}
+              >
+                <View
+                  style={[
+                    styles.currentExcerciseButton,
+                    styles.exerciseContainer,
+                    {
+                      backgroundColor: colors.blue,
+                      width: screenWidth - 20,
+                      height: scrollViewHeight / 6 - 10 - 10 / 6,
+                    },
+                  ]}
                 >
-                  <View
-                    style={[
-                      styles.currentExcerciseButton,
-                      styles.exerciseContainer,
-                      {
-                        backgroundColor: colors.blue,
-                        width: screenWidth - 20,
-                        height: scrollViewHeight / 6 - 10 - 10 / 6,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.currentExcerciseButtonText}>
-                      publish workout
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </ScrollView>
-            )
-            : (
-              <View style={styles.iconContainer}>
-                <ActivityIndicator size={32} color={colors.blue} />
-              </View>
-            )}
+                  <Text style={styles.currentExcerciseButtonText}>
+                    publish workout
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          ) : (
+            <View style={styles.iconContainer}>
+              <ActivityIndicator size={32} color={colors.blue} />
+            </View>
+          )}
         </View>
       </View>
       <>
-        {currentExercise
-          ? (
-            <View style={styles.currentExcerciseContainer}>
-              <TouchableWithoutFeedback
-                onPress={() => setCurrentExercise(null)}
-              >
-                <View style={styles.currentExcerciseBackground} />
-              </TouchableWithoutFeedback>
-              <View style={styles.currentExcerciseContent}>
-                <View style={styles.currentExcerciseBodyContainer}>
-                  <Body muscles={currentExercise.data.muscles} />
-                </View>
-                <View style={styles.descriptionContainer}>
-                  <Text>{currentExercise.data.description}</Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    const arr = selected ? selected : [];
-                    const id = currentExercise.id;
-                    if (arr.includes(id)) {
-                      setSelected(arr.filter((i) => i != id));
-                    } else setSelected([...arr, id]);
-                  }}
-                >
-                  <View
-                    style={[
-                      styles.currentExcerciseButton,
-                      {
-                        backgroundColor: selected?.includes(currentExercise.id)
-                          ? colors.darkGreen
-                          : colors.blue,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.currentExcerciseButtonText}>
-                      {selected?.includes(currentExercise.id)
-                        ? "remove from plan"
-                        : "add to plan"}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+        {currentExercise ? (
+          <View style={styles.currentExcerciseContainer}>
+            <TouchableWithoutFeedback onPress={() => setCurrentExercise(null)}>
+              <View style={styles.currentExcerciseBackground} />
+            </TouchableWithoutFeedback>
+            <View style={styles.currentExcerciseContent}>
+              <View style={styles.currentExcerciseBodyContainer}>
+                <Body muscles={currentExercise.data.muscles} />
               </View>
+              <View style={styles.descriptionContainer}>
+                <Text>{currentExercise.data.description}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  const arr = selected ? selected : [];
+                  const id = currentExercise.id;
+                  if (arr.includes(id)) {
+                    setSelected(arr.filter((i) => i != id));
+                  } else setSelected([...arr, id]);
+                }}
+              >
+                <View
+                  style={[
+                    styles.currentExcerciseButton,
+                    {
+                      backgroundColor: selected?.includes(currentExercise.id)
+                        ? colors.darkGreen
+                        : colors.blue,
+                    },
+                  ]}
+                >
+                  <Text style={styles.currentExcerciseButtonText}>
+                    {selected?.includes(currentExercise.id)
+                      ? "remove from plan"
+                      : "add to plan"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          )
-          : <></>}
+          </View>
+        ) : (
+          <></>
+        )}
       </>
     </>
   );

@@ -30,9 +30,11 @@ export interface ExerciseSet {
   mass: number;
 }
 
-export default function WorkoutSelector(
-  { setWorkout, ownWorkouts, sharedWorkouts },
-) {
+export default function WorkoutSelector({
+  setWorkout,
+  ownWorkouts,
+  sharedWorkouts,
+}) {
   const [sharedw, setSharedWorkouts] = useState<any[]>();
   const [ownw, setOwnWorkouts] = useState<any[]>();
 

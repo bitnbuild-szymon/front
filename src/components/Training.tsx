@@ -51,7 +51,7 @@ export default function Training({ route }) {
   const [exercises, setExercises] = useState<Exercise[]>();
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>();
   const [exerciseState, setExerciseState] = useState<ExerciseState>(
-    ExerciseState.READY,
+    ExerciseState.READY
   );
   const navigation = useNavigation();
 
@@ -73,7 +73,7 @@ export default function Training({ route }) {
           training.exercises.map((el: Exercise) => ({
             ...el,
             setsCompleted: 0,
-          })),
+          }))
         );
       } catch (e) {
         console.log(e);
@@ -86,13 +86,18 @@ export default function Training({ route }) {
       <>
         <StatusBar backgroundColor={colors.darkBlack} />
         <View style={styles.container}>
-          <Text style={styles.choose}>Choose a workout</Text>
-
-          <WorkoutSelector
-            setWorkout={setWorkout}
-            ownWorkouts={ownWorkouts}
-            sharedWorkouts={sharedWorkouts}
-          />
+          <View style={styles.titleContainer}>
+            <Text style={[styles.title, { fontSize: 24 }]}>
+              Choose a workout
+            </Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <WorkoutSelector
+              setWorkout={setWorkout}
+              ownWorkouts={ownWorkouts}
+              sharedWorkouts={sharedWorkouts}
+            />
+          </View>
         </View>
       </>
     );
@@ -109,10 +114,13 @@ export default function Training({ route }) {
           <ScrollView
             showsVerticalScrollIndicator={false}
             onLayout={({ nativeEvent }) =>
-              setScrollViewHeight(nativeEvent.layout.height)}
+              setScrollViewHeight(nativeEvent.layout.height)
+            }
             contentContainerStyle={styles.scrollView}
           >
-            {scrollViewHeight == 0 ? <></> : (
+            {scrollViewHeight == 0 ? (
+              <></>
+            ) : (
               exercises?.map((exercise, i) => {
                 return (
                   <TouchableWithoutFeedback
@@ -159,25 +167,25 @@ export default function Training({ route }) {
         </TouchableWithoutFeedback>
       </View>
       <>
-        {currentExercise
-          ? (
-            <>
-              <View
-                style={{
-                  backgroundColor: colors.darkGreen,
-                  width: "100%",
-                  height: 20,
-                }}
-              />
-              <CurrentExcercise
-                currentExercise={currentExercise}
-                clearCurrentExcercise={() => setCurrentExercise(null)}
-                exerciseState={exerciseState}
-                setExerciseState={setExerciseState}
-              />
-            </>
-          )
-          : <></>}
+        {currentExercise ? (
+          <>
+            <View
+              style={{
+                backgroundColor: colors.darkGreen,
+                width: "100%",
+                height: 20,
+              }}
+            />
+            <CurrentExcercise
+              currentExercise={currentExercise}
+              clearCurrentExcercise={() => setCurrentExercise(null)}
+              exerciseState={exerciseState}
+              setExerciseState={setExerciseState}
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </>
     </>
   );

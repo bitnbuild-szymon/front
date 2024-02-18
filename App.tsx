@@ -15,9 +15,14 @@ import NewWorkout from "./src/components/NewWorkout";
 import colors from "./colors";
 import Friends from "./src/components/Friends";
 
+import { LogBox } from "react-native";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  LogBox.ignoreLogs(["Warning: ..."]);
+  LogBox.ignoreAllLogs();
+
   useEffect(() => {
     init();
   }, []);

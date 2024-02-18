@@ -109,6 +109,10 @@ export default function App() {
                 <Tab.Screen
                   name="NewWorkout"
                   component={NewWorkout}
+                  initialParams={{
+                    profile: user.userProfile,
+                    logout: () => setUser(null),
+                  }}
                   options={{
                     tabBarItemStyle: { display: "none" },
                     headerShown: false,

@@ -6,21 +6,41 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getFriendsIds, getUser } from "bitnbuild-back";
 import colors from "../../colors";
 
 // TODO you challange someone
 // TODO someone challenge you (who and which workout)
 // TODO you can add someone to friends
 
-interface Challenge {
-  inviterId: string;
-  workoutId: string;
+interface SharedWorkout {
+  id: string;
+  by: string;
+}
+
+interface User {
+  id?: string;
+  email?: string;
+  username: string;
+  ownedWorkouts?: string[]; // ids
+  sharedWorkouts?: SharedWorkout[];
+  friends: string[]; // ids
 }
 
 export default function Friends() {
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
-  const [challenges, setChallenges] = useState<Challenge>();
+  const [challenges, setChallenges] = useState<SharedWorkout[]>();
+  const [friends, setFriends] = useState<User[]>();
+
+  useEffect(() => {
+    (async () => {
+      const ids = await getFriendsIds("IFBVDZHMGmaeI6OksMiPO7ropyD2"); // your id
+      const friends: User[] = [];
+      for (const friendId of ids) friends.push(await getUser(friendId));
+      setFriends(friends);
+    })();
+  }, []);
 
   return (
     <>
@@ -37,7 +57,31 @@ export default function Friends() {
             }
             contentContainerStyle={styles.scrollView}
           >
-            <View />
+            {scrollViewHeight == 0 ? (
+              <></>
+            ) : (
+              friends?.map((user) => {
+                return (
+                  <View
+                    style={[
+                      {
+                        backgroundColor: colors.lightGray,
+                        borderRadius: 12,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: 6,
+                      },
+                      {
+                        width: screenWidth - 20,
+                        height: scrollViewHeight / 6 - 10 - 10 / 6,
+                      },
+                    ]}
+                  >
+                    <Text>{user.username}</Text>
+                  </View>
+                );
+              })
+            )}
           </ScrollView>
         </View>
       </View>

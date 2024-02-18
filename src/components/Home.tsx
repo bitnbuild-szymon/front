@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -18,6 +19,7 @@ import {
   getOwnedWorkoutsIds,
   getSharedWorkouts,
   getUser,
+  shareWorkouts,
 } from "bitnbuild-back";
 
 export default function Home({ route }) {
@@ -92,34 +94,65 @@ export default function Home({ route }) {
             />
           </View>
           <View style={styles.challangeContainer}>
-            {seluser ? (
-              <Text style={styles.seluser}>
-                You are challenging {seluser.username}
-              </Text>
-            ) : (
-              <>
-                <Text style={styles.seluser}>Select a friend to challenge</Text>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    console.log("sss");
+            {seluser
+              ? (
+                <Text style={styles.seluser}>
+                  You are challenging {seluser.username}
+                </Text>
+              )
+              : (
+                <>
+                  <Text style={styles.seluser}>
+                    Select a friend to challenge
+                  </Text>
+                </>
+              )}
+            {selwork
+              ? (
+                seluser && (
+                  <Text style={styles.selwork}>
+                    with {selwork.name} workout
+                  </Text>
+                )
+              )
+              : (
+                <Text style={styles.seluser}>
+                  Select a workout to challenge
+                </Text>
+              )}
+            {seluser && selwork && (
+              <TouchableOpacity
+                onPress={async () => {
+                  try {
+                    await shareWorkouts(seluser.id, route.params.profile.id, [
+                      selwork.id,
+                    ]);
+                  } catch (e) {
+                  }
+                  selWork(null);
+                  selUser(null);
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: colors.red,
+                    width: "100%",
+                    borderRadius: 8,
+                    padding: 4,
+                    marginTop: 16,
                   }}
                 >
-                  <View
+                  <Text
                     style={{
-                      backgroundColor: colors.darkGreen,
-                      width: "100%",
-                      height: 32,
+                      color: colors.white,
+                      textAlign: "center",
+                      fontSize: 30,
                     }}
-                  ></View>
-                </TouchableWithoutFeedback>
-              </>
-            )}
-            {selwork ? (
-              seluser && (
-                <Text style={styles.selwork}>with {selwork.name} workout</Text>
-              )
-            ) : (
-              <Text style={styles.seluser}>Select a workout to challenge</Text>
+                  >
+                    Challenge
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )}
           </View>
         </View>

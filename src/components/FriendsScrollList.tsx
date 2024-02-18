@@ -28,34 +28,38 @@ interface User {
 export default function FriendsScrollList({ friends, setUser }) {
   return (
     <>
-      {friends ? (
-        friends.map((user) => {
-          return (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollView}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  setUser(user);
-                }}
-                style={styles.userContainer}
-              >
-                <FontAwesome6
-                  name="person"
-                  size={24}
-                  color={colors.darkBlack}
-                />
-                <Text style={{ color: colors.darkBlack }}>{user.username}</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          );
-        })
-      ) : (
-        <View style={styles.iconContainer}>
-          <ActivityIndicator size={32} color={colors.blue} />
-        </View>
-      )}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollView}
+      >
+        {friends
+          ? (
+            friends.map((user) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setUser(user);
+                  }}
+                  style={styles.userContainer}
+                >
+                  <FontAwesome6
+                    name="person"
+                    size={24}
+                    color={colors.darkBlack}
+                  />
+                  <Text style={{ color: colors.darkBlack }}>
+                    {user.username}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })
+          )
+          : (
+            <View style={styles.iconContainer}>
+              <ActivityIndicator size={32} color={colors.blue} />
+            </View>
+          )}
+      </ScrollView>
     </>
   );
 }

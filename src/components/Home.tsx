@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import colors from "../../colors";
 import Time from "../static/time";
 import quotes from "../static/quotes.json";
+import FriendsScrollList from "./FriendsScrollList";
 
 export default function Home({ route }) {
   const containerHeight = useRef<number>();
@@ -38,9 +39,7 @@ export default function Home({ route }) {
             Hello, {route.params?.profile?.username || "User"}
           </Text>
 
-          <TouchableWithoutFeedback
-            onPress={route.params?.logout}
-          >
+          <TouchableWithoutFeedback onPress={route.params?.logout}>
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableWithoutFeedback>
         </View>
@@ -52,7 +51,9 @@ export default function Home({ route }) {
           <Text style={styles.dateText}>{date.getDateName()}</Text>
         </View>
         <View style={styles.contentContainer}>
-          <View style={styles.componentContainer}></View>
+          <View style={styles.componentContainer}>
+            <FriendsScrollList />
+          </View>
           <View style={styles.progressContainer}>
             <View style={styles.progressPhotosContainer}>
               <View style={styles.progressLeftPhoto} />
@@ -155,6 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginTop: 10,
     borderRadius: 10,
+    overflow: "hidden",
   },
 
   //#region progress

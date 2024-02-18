@@ -69,8 +69,6 @@ export default function WorkoutSelector(
 
   return (
     <View>
-      <Text style={styles.choose}>Choose a workout</Text>
-
       <FlatList
         data={sharedw}
         keyExtractor={(item) => item.workout.id}

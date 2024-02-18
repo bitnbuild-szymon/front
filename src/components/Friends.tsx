@@ -1,14 +1,15 @@
 import {
-  View,
-  Text,
-  StatusBar,
-  StyleSheet,
   Dimensions,
   ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getFriendsIds, getUser } from "bitnbuild-back";
+import { addFriend, getUser, getUsersIds } from "bitnbuild-back";
 import colors from "../../colors";
+import FriendsScrollList from "./FriendsScrollList";
 
 // TODO you challange someone
 // TODO someone challenge you (who and which workout)
@@ -28,16 +29,22 @@ interface User {
   friends: string[]; // ids
 }
 
-export default function Friends() {
-  const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
-  const [challenges, setChallenges] = useState<SharedWorkout[]>();
+export default function Friends({ route }) {
   const [friends, setFriends] = useState<User[]>();
+  const addF = async (u: User) => {
+    await addFriend(route.params.profile.id, u.id);
+    setFriends(friends.filter((f) => f.id !== u.id));
+  };
 
   useEffect(() => {
     (async () => {
-      const ids = await getFriendsIds("IFBVDZHMGmaeI6OksMiPO7ropyD2"); // your id
+      const ids = await getUsersIds(); // your id
       const friends: User[] = [];
-      for (const friendId of ids) friends.push(await getUser(friendId));
+      for (const friendId of ids) {
+        if (!route.params.profile.friends.includes(friendId)) {
+          friends.push(await getUser(friendId));
+        }
+      }
       setFriends(friends);
     })();
   }, []);
@@ -50,39 +57,7 @@ export default function Friends() {
           <Text style={styles.title}>friends</Text>
         </View>
         <View style={styles.contentContainer}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            onLayout={({ nativeEvent }) =>
-              setScrollViewHeight(nativeEvent.layout.height)
-            }
-            contentContainerStyle={styles.scrollView}
-          >
-            {scrollViewHeight == 0 ? (
-              <></>
-            ) : (
-              friends?.map((user) => {
-                return (
-                  <View
-                    style={[
-                      {
-                        backgroundColor: colors.lightGray,
-                        borderRadius: 12,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        padding: 6,
-                      },
-                      {
-                        width: screenWidth - 20,
-                        height: scrollViewHeight / 6 - 10 - 10 / 6,
-                      },
-                    ]}
-                  >
-                    <Text>{user.username}</Text>
-                  </View>
-                );
-              })
-            )}
-          </ScrollView>
+          <FriendsScrollList friends={friends} setUser={addF} />
         </View>
       </View>
     </>

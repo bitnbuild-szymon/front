@@ -12,7 +12,13 @@ import colors from "../../colors";
 import Time from "../static/time";
 import quotes from "../static/quotes.json";
 import FriendsScrollList from "./FriendsScrollList";
-import { getFriendsIds, getUser } from "bitnbuild-back";
+import WorkoutSelector from "./WorkoutSelector";
+import {
+  getFriendsIds,
+  getOwnedWorkoutsIds,
+  getSharedWorkouts,
+  getUser,
+} from "bitnbuild-back";
 
 export default function Home({ route }) {
   const containerHeight = useRef<number>();
@@ -33,10 +39,20 @@ export default function Home({ route }) {
         const ids = await getFriendsIds(route.params?.profile?.id); // your id
         const friends = [];
         for (const friendId of ids) friends.push(await getUser(friendId));
-        console.log(friends);
         setFriends(friends);
       } catch (e) {
       }
+    })();
+  }, []);
+
+  const [selwork, selWork] = useState<any>();
+  const [seluser, selUser] = useState<any>();
+
+  const [ownWorkouts, setOwnWorkouts] = useState<any[]>();
+
+  useEffect(() => {
+    (async () => {
+      setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
     })();
   }, []);
 
@@ -67,16 +83,36 @@ export default function Home({ route }) {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.componentContainer}>
-            <FriendsScrollList friends={friends} />
+            <FriendsScrollList friends={friends} setUser={selUser} />
           </View>
           <View style={styles.progressContainer}>
-            <View style={styles.progressPhotosContainer}>
-              <View style={styles.progressLeftPhoto} />
-              <View style={styles.progressRightPhotosContainer}>
-                <View style={styles.progressPhotoTopRight} />
-                <View style={styles.progressPhotoBottomRight} />
-              </View>
-            </View>
+            <WorkoutSelector
+              setWorkout={selWork}
+              ownWorkouts={ownWorkouts}
+              sharedWorkouts={[]}
+            />
+          </View>
+          <View style={styles.progressContainer}>
+            {seluser
+              ? (
+                <Text style={styles.seluser}>
+                  You are challenging {seluser.username}
+                </Text>
+              )
+              : (
+                <Text style={styles.seluser}>
+                  Select a friend to challenge
+                </Text>
+              )}
+            {selwork
+              ? seluser && (
+                <Text style={styles.selwork}>with {selwork.name} workout</Text>
+              )
+              : (
+                <Text style={styles.seluser}>
+                  Select a workout to challenge
+                </Text>
+              )}
           </View>
         </View>
       </View>
@@ -228,5 +264,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red,
     padding: 8,
     borderRadius: 8,
+  },
+  seluser: {
+    color: colors.darkBlack,
+    fontFamily: "Lato-Bold",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 10,
+  },
+  selwork: {
+    color: colors.darkBlack,
+    fontFamily: "Lato-Bold",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 10,
   },
 });

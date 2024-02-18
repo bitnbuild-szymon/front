@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -24,7 +25,7 @@ interface User {
   friends: string[]; // ids
 }
 
-export default function FriendsScrollList({ friends }) {
+export default function FriendsScrollList({ friends, setUser }) {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -36,7 +37,12 @@ export default function FriendsScrollList({ friends }) {
             friends.map((user) => {
               return (
                 <>
-                  <View style={styles.userContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setUser(user);
+                    }}
+                    style={styles.userContainer}
+                  >
                     <FontAwesome6
                       name="person"
                       size={24}
@@ -45,7 +51,7 @@ export default function FriendsScrollList({ friends }) {
                     <Text style={{ color: colors.darkBlack }}>
                       {user.username}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </>
               );
             })

@@ -80,11 +80,18 @@ export default function Training({ route }) {
 
   if (!workout) {
     return (
-      <WorkoutSelector
-        setWorkout={setWorkout}
-        ownWorkouts={ownWorkouts}
-        sharedWorkouts={sharedWorkouts}
-      />
+      <>
+        <StatusBar backgroundColor={colors.darkBlack} />
+        <View style={styles.container}>
+          <Text style={styles.choose}>Choose a workout</Text>
+
+          <WorkoutSelector
+            setWorkout={setWorkout}
+            ownWorkouts={ownWorkouts}
+            sharedWorkouts={sharedWorkouts}
+          />
+        </View>
+      </>
     );
   }
 

@@ -3,7 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import { View } from "react-native";
-import { Entypo, Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { init } from "bitnbuild-back";
@@ -38,120 +38,122 @@ export default function App() {
       <View onLayout={onLayoutRootView} />
       <NavigationContainer>
         <Tab.Navigator>
-          {user ? (
-            <>
-              <Tab.Screen
-                name="Home"
-                component={Home}
-                initialParams={{
-                  profile: user.userProfile,
-                  logout: () => setUser(null),
-                }}
-                options={{
-                  headerShown: false,
-                  tabBarActiveTintColor: colors.blue,
-                  tabBarIcon({ focused }) {
-                    return (
-                      <Ionicons
-                        name="home"
+          {user
+            ? (
+              <>
+                <Tab.Screen
+                  name="Home"
+                  component={Home}
+                  initialParams={{
+                    profile: user.userProfile,
+                    logout: () => setUser(null),
+                  }}
+                  options={{
+                    headerShown: false,
+                    tabBarActiveTintColor: colors.blue,
+                    tabBarIcon({ focused }) {
+                      return (
+                        <Ionicons
+                          name="home"
+                          size={24}
+                          color={focused ? colors.blue : colors.darkBlack}
+                        />
+                      );
+                    },
+                  }}
+                />
+                <Tab.Screen
+                  name="Training"
+                  component={Training}
+                  initialParams={{
+                    profile: user.userProfile,
+                    logout: () => setUser(null),
+                  }}
+                  options={{
+                    headerShown: false,
+                    tabBarActiveTintColor: colors.blue,
+                    tabBarIcon({ focused }) {
+                      return (
+                        <Ionicons
+                          name="barbell"
+                          size={24}
+                          color={focused ? colors.blue : colors.darkBlack}
+                        />
+                      );
+                    },
+                  }}
+                />
+                <Tab.Screen
+                  name="Add Friends"
+                  component={Friends}
+                  initialParams={{
+                    profile: user.userProfile,
+                    logout: () => setUser(null),
+                  }}
+                  options={{
+                    headerShown: false,
+                    tabBarActiveTintColor: colors.blue,
+                    tabBarIcon({ focused }) {
+                      return (
+                        <FontAwesome5
+                          name="user-friends"
+                          size={24}
+                          color={focused ? colors.blue : colors.darkBlack}
+                        />
+                      );
+                    },
+                  }}
+                />
+                <Tab.Screen
+                  name="NewWorkout"
+                  component={NewWorkout}
+                  options={{
+                    tabBarItemStyle: { display: "none" },
+                    headerShown: false,
+                  }}
+                />
+              </>
+            )
+            : (
+              <>
+                <Tab.Screen
+                  name="Login"
+                  component={Login}
+                  initialParams={{
+                    setUser,
+                  }}
+                  options={{
+                    headerShown: false,
+                    tabBarActiveTintColor: colors.blue,
+                    tabBarIcon: ({ focused }) => (
+                      <Entypo
+                        name="login"
                         size={24}
-                        color={focused ? colors.blue : colors.darkBlack}
+                        color={focused ? colors.blue : colors.darkGray}
                       />
-                    );
-                  },
-                }}
-              />
-              <Tab.Screen
-                name="Training"
-                component={Training}
-                initialParams={{
-                  profile: user.userProfile,
-                  logout: () => setUser(null),
-                }}
-                options={{
-                  headerShown: false,
-                  tabBarActiveTintColor: colors.blue,
-                  tabBarIcon({ focused }) {
-                    return (
-                      <Ionicons
-                        name="barbell"
+                    ),
+                  }}
+                />
+                <Tab.Screen
+                  name="Register"
+                  component={Register}
+                  initialParams={{
+                    setUser,
+                  }}
+                  options={{
+                    headerShown: false,
+                    tabBarActiveTintColor: colors.blue,
+                    tabBarIcon: ({ focused }) => (
+                      <Entypo
+                        name="login"
                         size={24}
-                        color={focused ? colors.blue : colors.darkBlack}
+                        color={focused ? colors.blue : colors.darkGray}
                       />
-                    );
-                  },
-                }}
-              />
-              <Tab.Screen
-                name="Friends"
-                component={Friends}
-                initialParams={{
-                  profile: user.userProfile,
-                  logout: () => setUser(null),
-                }}
-                options={{
-                  headerShown: false,
-                  tabBarActiveTintColor: colors.blue,
-                  tabBarIcon({ focused }) {
-                    return (
-                      <FontAwesome5
-                        name="user-friends"
-                        size={24}
-                        color={focused ? colors.blue : colors.darkBlack}
-                      />
-                    );
-                  },
-                }}
-              />
-              <Tab.Screen
-                name="NewWorkout"
-                component={NewWorkout}
-                options={{
-                  tabBarItemStyle: { display: "none" },
-                  headerShown: false,
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <Tab.Screen
-                name="Login"
-                component={Login}
-                initialParams={{
-                  setUser,
-                }}
-                options={{
-                  headerShown: false,
-                  tabBarActiveTintColor: colors.blue,
-                  tabBarIcon: ({ focused }) => (
-                    <Entypo
-                      name="login"
-                      size={24}
-                      color={focused ? colors.blue : colors.darkGray}
-                    />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="Register"
-                component={Register}
-                initialParams={{
-                  setUser,
-                }}
-                options={{
-                  headerShown: false,
-                  tabBarActiveTintColor: colors.blue,
-                  tabBarIcon: ({ focused }) => (
-                    <Entypo
-                      name="login"
-                      size={24}
-                      color={focused ? colors.blue : colors.darkGray}
-                    />
-                  ),
-                }}
-              />
-            </>
-          )}
+                    ),
+                  }}
+                />
+              </>
+            )}
         </Tab.Navigator>
       </NavigationContainer>
     </>

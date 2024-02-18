@@ -57,10 +57,13 @@ export default function Training({ route }) {
 
   useEffect(() => {
     (async () => {
-      setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
-      setSharedWorkouts(await getSharedWorkouts(route.params.profile.id));
+      try {
+        setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
+        setSharedWorkouts(await getSharedWorkouts(route.params.profile.id));
+      } catch (e) {
+      }
     })();
-  }, []);
+  }, [route.params?.profile?.id]);
 
   useEffect(() => {
     (async () => {

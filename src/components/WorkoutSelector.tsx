@@ -48,7 +48,7 @@ export default function WorkoutSelector(
       }
       setOwnWorkouts(ow);
     })();
-  }, []);
+  }, [ownWorkouts]);
 
   useEffect(() => {
     (async () => {
@@ -65,7 +65,7 @@ export default function WorkoutSelector(
       }
       setSharedWorkouts(sw);
     })();
-  }, []);
+  }, [sharedWorkouts]);
 
   return (
     <View>

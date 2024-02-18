@@ -17,6 +17,7 @@ import WorkoutSelector from "./WorkoutSelector";
 import {
   getFriendsIds,
   getOwnedWorkoutsIds,
+  getRandomQuote,
   getSharedWorkouts,
   getUser,
   shareWorkouts,
@@ -27,12 +28,10 @@ export default function Home({ route }) {
   const navigation = useNavigation();
   const date = new Time(new Date());
 
-  const getRandomQuote = () => {
-    const index = Math.floor(Math.random() * quotes.length);
-    return quotes[index];
-  };
-
-  const quote = getRandomQuote();
+  const [quote, setQuote] = useState<any>();
+  useEffect(() => {
+    setQuote(getRandomQuote());
+  }, []);
 
   const [friends, setFriends] = useState<any[]>([]);
   useEffect(() => {
@@ -76,8 +75,8 @@ export default function Home({ route }) {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.quoteView}>
-          <Text style={styles.quoteText}>{quote.text}</Text>
-          <Text style={styles.quoteAuthor}>{` ${quote.author} `}</Text>
+          <Text style={styles.quoteText}>{quote?.text}</Text>
+          <Text style={styles.quoteAuthor}>{` ${quote?.author} `}</Text>
         </View>
         <View style={styles.dateContainer}>
           <Text style={styles.dateText}>{date.getDateName()}</Text>

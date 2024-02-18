@@ -61,7 +61,7 @@ export default function NewWorkout({ route }) {
         <View style={styles.contentContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Enter your text here..."
+            placeholder="Enter workout name here..."
             onChangeText={setName}
             value={name}
           />
@@ -98,7 +98,7 @@ export default function NewWorkout({ route }) {
                                 exercise.data.name.slice(1)}
                             </Text>
                             <Text style={styles.exerciseAmountText}>
-                              {exercise.data.description}
+                              {exercise.data.description.slice(0, 160) + "..."}
                             </Text>
                           </View>
                           <View style={styles.exerciseBodyContainer}>

@@ -8,12 +8,18 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getWorkout, getWorkoutsIds } from "bitnbuild-back";
+import {
+  getOwnedWorkoutsIds,
+  getSharedWorkouts,
+  getWorkout,
+  getWorkoutsIds,
+} from "bitnbuild-back";
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../../colors";
 import Body from "./Body";
 import CurrentExcercise from "./CurrentExcercise";
 import { useNavigation } from "@react-navigation/native";
+import WorkoutSelector from "./WorkoutSelector";
 
 export enum ExerciseState {
   INPROGRESS,
@@ -36,23 +42,51 @@ export interface Exercise {
   sets: Set[];
 }
 
-export default function Training() {
+export default function Training({ route }) {
+  const [workout, setWorkout] = useState<any>();
+  const [ownWorkouts, setOwnWorkouts] = useState<any[]>();
+  const [sharedWorkouts, setSharedWorkouts] = useState<any[]>();
+
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
   const [exercises, setExercises] = useState<Exercise[]>();
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>();
   const [exerciseState, setExerciseState] = useState<ExerciseState>(
-    ExerciseState.READY
+    ExerciseState.READY,
   );
   const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
-      const training = await getWorkout("BIkNMkSO2W0ONVXDu17v");
-      setExercises(
-        training.exercises.map((el: Exercise) => ({ ...el, setsCompleted: 0 }))
-      );
+      setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
+      setSharedWorkouts(await getSharedWorkouts(route.params.profile.id));
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const training = await getWorkout(workout.id || "");
+        setExercises(
+          training.exercises.map((el: Exercise) => ({
+            ...el,
+            setsCompleted: 0,
+          })),
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [workout]);
+
+  if (!workout) {
+    return (
+      <WorkoutSelector
+        setWorkout={setWorkout}
+        ownWorkouts={ownWorkouts}
+        sharedWorkouts={sharedWorkouts}
+      />
+    );
+  }
 
   return (
     <>
@@ -65,13 +99,10 @@ export default function Training() {
           <ScrollView
             showsVerticalScrollIndicator={false}
             onLayout={({ nativeEvent }) =>
-              setScrollViewHeight(nativeEvent.layout.height)
-            }
+              setScrollViewHeight(nativeEvent.layout.height)}
             contentContainerStyle={styles.scrollView}
           >
-            {scrollViewHeight == 0 ? (
-              <></>
-            ) : (
+            {scrollViewHeight == 0 ? <></> : (
               exercises?.map((exercise, i) => {
                 return (
                   <TouchableWithoutFeedback
@@ -118,25 +149,25 @@ export default function Training() {
         </TouchableWithoutFeedback>
       </View>
       <>
-        {currentExercise ? (
-          <>
-            <View
-              style={{
-                backgroundColor: colors.darkGreen,
-                width: "100%",
-                height: 20,
-              }}
-            />
-            <CurrentExcercise
-              currentExercise={currentExercise}
-              clearCurrentExcercise={() => setCurrentExercise(null)}
-              exerciseState={exerciseState}
-              setExerciseState={setExerciseState}
-            />
-          </>
-        ) : (
-          <></>
-        )}
+        {currentExercise
+          ? (
+            <>
+              <View
+                style={{
+                  backgroundColor: colors.darkGreen,
+                  width: "100%",
+                  height: 20,
+                }}
+              />
+              <CurrentExcercise
+                currentExercise={currentExercise}
+                clearCurrentExcercise={() => setCurrentExercise(null)}
+                exerciseState={exerciseState}
+                setExerciseState={setExerciseState}
+              />
+            </>
+          )
+          : <></>}
       </>
     </>
   );

@@ -1,9 +1,9 @@
 import {
-  View,
-  Text,
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
+  Text,
+  View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -24,46 +24,37 @@ interface User {
   friends: string[]; // ids
 }
 
-export default function FriendsScrollList() {
-  const [friends, setFriends] = useState<User[]>();
-
-  useEffect(() => {
-    (async () => {
-      const ids = await getFriendsIds("IFBVDZHMGmaeI6OksMiPO7ropyD2"); // your id
-      const friends: User[] = [];
-      for (const friendId of ids) friends.push(await getUser(friendId));
-      setFriends(friends);
-    })();
-  }, []);
-
+export default function FriendsScrollList({ friends }) {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollView}
     >
       <>
-        {friends ? (
-          friends.map((user) => {
-            return (
-              <>
-                <View style={styles.userContainer}>
-                  <FontAwesome6
-                    name="person"
-                    size={24}
-                    color={colors.darkBlack}
-                  />
-                  <Text style={{ color: colors.darkBlack }}>
-                    {user.username}
-                  </Text>
-                </View>
-              </>
-            );
-          })
-        ) : (
-          <View style={styles.iconContainer}>
-            <ActivityIndicator size={32} color={colors.blue} />
-          </View>
-        )}
+        {friends
+          ? (
+            friends.map((user) => {
+              return (
+                <>
+                  <View style={styles.userContainer}>
+                    <FontAwesome6
+                      name="person"
+                      size={24}
+                      color={colors.darkBlack}
+                    />
+                    <Text style={{ color: colors.darkBlack }}>
+                      {user.username}
+                    </Text>
+                  </View>
+                </>
+              );
+            })
+          )
+          : (
+            <View style={styles.iconContainer}>
+              <ActivityIndicator size={32} color={colors.blue} />
+            </View>
+          )}
       </>
     </ScrollView>
   );

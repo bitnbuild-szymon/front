@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   StatusBar,
@@ -12,6 +12,7 @@ import colors from "../../colors";
 import Time from "../static/time";
 import quotes from "../static/quotes.json";
 import FriendsScrollList from "./FriendsScrollList";
+import { getFriendsIds, getUser } from "bitnbuild-back";
 
 export default function Home({ route }) {
   const containerHeight = useRef<number>();
@@ -24,6 +25,20 @@ export default function Home({ route }) {
   };
 
   const quote = getRandomQuote();
+
+  const [friends, setFriends] = useState<any[]>([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const ids = await getFriendsIds(route.params?.profile?.id); // your id
+        const friends = [];
+        for (const friendId of ids) friends.push(await getUser(friendId));
+        console.log(friends);
+        setFriends(friends);
+      } catch (e) {
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -52,7 +67,7 @@ export default function Home({ route }) {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.componentContainer}>
-            <FriendsScrollList />
+            <FriendsScrollList friends={friends} />
           </View>
           <View style={styles.progressContainer}>
             <View style={styles.progressPhotosContainer}>

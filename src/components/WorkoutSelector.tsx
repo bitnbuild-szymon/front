@@ -75,7 +75,7 @@ export default function WorkoutSelector(
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.workoutContainer}
-            onPress={() => setWorkout(item)}
+            onPress={() => setWorkout(item.workout)}
           >
             <Text style={styles.challenged}>
               You've been challanged by {item.user.username}

@@ -40,8 +40,7 @@ export default function Home({ route }) {
         const friends = [];
         for (const friendId of ids) friends.push(await getUser(friendId));
         setFriends(friends);
-      } catch (e) {
-      }
+      } catch (e) {}
     })();
   }, []);
 
@@ -85,34 +84,43 @@ export default function Home({ route }) {
           <View style={styles.componentContainer}>
             <FriendsScrollList friends={friends} setUser={selUser} />
           </View>
-          <View style={styles.progressContainer}>
+          <View style={styles.challangeContainer}>
             <WorkoutSelector
               setWorkout={selWork}
               ownWorkouts={ownWorkouts}
               sharedWorkouts={[]}
             />
           </View>
-          <View style={styles.progressContainer}>
-            {seluser
-              ? (
-                <Text style={styles.seluser}>
-                  You are challenging {seluser.username}
-                </Text>
-              )
-              : (
-                <Text style={styles.seluser}>
-                  Select a friend to challenge
-                </Text>
-              )}
-            {selwork
-              ? seluser && (
+          <View style={styles.challangeContainer}>
+            {seluser ? (
+              <Text style={styles.seluser}>
+                You are challenging {seluser.username}
+              </Text>
+            ) : (
+              <>
+                <Text style={styles.seluser}>Select a friend to challenge</Text>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    console.log("sss");
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: colors.darkGreen,
+                      width: "100%",
+                      height: 32,
+                    }}
+                  ></View>
+                </TouchableWithoutFeedback>
+              </>
+            )}
+            {selwork ? (
+              seluser && (
                 <Text style={styles.selwork}>with {selwork.name} workout</Text>
               )
-              : (
-                <Text style={styles.seluser}>
-                  Select a workout to challenge
-                </Text>
-              )}
+            ) : (
+              <Text style={styles.seluser}>Select a workout to challenge</Text>
+            )}
           </View>
         </View>
       </View>
@@ -197,6 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whitesmoke,
     width: screenWidth,
     paddingHorizontal: 10,
+    paddingBottom: 12,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     gap: 10,
@@ -211,53 +220,13 @@ const styles = StyleSheet.create({
   },
 
   //#region progress
-  progressContainer: {
+  challangeContainer: {
     flex: 3,
     paddingHorizontal: 8,
-    backgroundColor: colors.white,
-    marginBottom: 12,
+    backgroundColor: colors.lightGray,
     borderRadius: 10,
   },
-  progressTitle: {
-    flex: 1,
-    fontFamily: "Lato-Bold",
-    fontSize: 16,
-    paddingTop: 12,
-    paddingHorizontal: 2,
-  },
-  progressPhotosContainer: {
-    flex: 11,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingBottom: 6,
-    paddingTop: 8,
-  },
-  progressLeftPhoto: {
-    height: "100%",
-    width: "63%",
-    marginRight: 2,
-    backgroundColor: "deepskyblue",
-    borderBottomLeftRadius: 6,
-    borderTopLeftRadius: 6,
-  },
-  progressRightPhotosContainer: {
-    height: "100%",
-    width: "36%",
-    paddingLeft: 3,
-  },
-  progressPhotoTopRight: {
-    marginBottom: 3,
-    flex: 1,
-    backgroundColor: "deepskyblue",
-    borderTopRightRadius: 6,
-  },
-  progressPhotoBottomRight: {
-    marginTop: 3,
-    flex: 1,
-    backgroundColor: "deepskyblue",
-    borderBottomRightRadius: 6,
-  },
+
   //#endregion
   logoutText: {
     color: colors.white,

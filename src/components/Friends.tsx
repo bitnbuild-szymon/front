@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { addFriend, getUser, getUsersIds } from "bitnbuild-back";
 import colors from "../../colors";

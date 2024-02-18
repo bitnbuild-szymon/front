@@ -34,7 +34,9 @@ export default function Home({ route }) {
   }, []);
 
   const [friends, setFriends] = useState<any[]>([]);
+
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
     (async () => {
       try {
         const ids = await getFriendsIds(route.params?.profile?.id); // your id
@@ -43,7 +45,10 @@ export default function Home({ route }) {
         setFriends(friends);
       } catch (e) {}
     })();
-  }, []);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const [selwork, selWork] = useState<any>();
   const [seluser, selUser] = useState<any>();
@@ -51,10 +56,14 @@ export default function Home({ route }) {
   const [ownWorkouts, setOwnWorkouts] = useState<any[]>();
 
   useEffect(() => {
-    (async () => {
-      setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
-    })();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      (async () => {
+        setOwnWorkouts(await getOwnedWorkoutsIds(route.params.profile.id));
+      })();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <>
@@ -93,22 +102,32 @@ export default function Home({ route }) {
             />
           </View>
           <View style={styles.challangeContainer}>
-            {seluser ? (
-              <Text style={styles.seluser}>
-                You are challenging {seluser.username}
-              </Text>
-            ) : (
-              <>
-                <Text style={styles.seluser}>Select a friend to challenge</Text>
-              </>
-            )}
-            {selwork ? (
-              seluser && (
-                <Text style={styles.selwork}>with {selwork.name} workout</Text>
+            {seluser
+              ? (
+                <Text style={styles.seluser}>
+                  You are challenging {seluser.username}
+                </Text>
               )
-            ) : (
-              <Text style={styles.seluser}>Select a workout to challenge</Text>
-            )}
+              : (
+                <>
+                  <Text style={styles.seluser}>
+                    Select a friend to challenge
+                  </Text>
+                </>
+              )}
+            {selwork
+              ? (
+                seluser && (
+                  <Text style={styles.selwork}>
+                    with {selwork.name} workout
+                  </Text>
+                )
+              )
+              : (
+                <Text style={styles.seluser}>
+                  Select a workout to challenge
+                </Text>
+              )}
             {seluser && selwork && (
               <TouchableOpacity
                 onPress={async () => {

@@ -41,7 +41,10 @@ export default function Friends({ route }) {
       const ids = await getUsersIds(); // your id
       const friends: User[] = [];
       for (const friendId of ids) {
-        if (!route.params.profile.friends.includes(friendId)) {
+        if (
+          !route.params.profile.friends.includes(friendId) &&
+          route.params.profile.id !== friendId
+        ) {
           friends.push(await getUser(friendId));
         }
       }

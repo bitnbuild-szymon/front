@@ -18,7 +18,9 @@ import Friends from "./src/components/Friends";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  useEffect(() => init(), []);
+  useEffect(() => {
+    init();
+  }, []);
 
   const [user, setUser] = useState(null);
   const Tab = createBottomTabNavigator();

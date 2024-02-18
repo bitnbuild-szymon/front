@@ -109,6 +109,17 @@ export default function Training({ route }) {
               sharedWorkouts={sharedWorkouts}
             />
           </View>
+
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("NewWorkout" as never)}
+          >
+            <AntDesign
+              name="pluscircle"
+              size={48}
+              color={colors.blue}
+              style={{ position: "absolute", right: 12, bottom: 16 }}
+            />
+          </TouchableWithoutFeedback>
         </View>
       </>
     );
